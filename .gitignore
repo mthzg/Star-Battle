@@ -1,0 +1,7 @@
+# Fichiers Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Fichiers spécifiques à l'IDE
+.vscode/
