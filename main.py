@@ -1,9 +1,11 @@
 from board import Board
-from interface import Grid_UI
+from interface import Interface
+
 
 def main():
     board = Board(10)
-    ui = Grid_UI(board)
+    board.display_grid()
+    ui = Interface(board)
     ui.show()
 
     

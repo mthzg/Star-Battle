@@ -1,8 +1,11 @@
+from algo import Algo
 import tkinter as tk
 
-class Grid_UI:
+class Interface:
     def __init__(self, board):
         self.board = board
+        self.algo = Algo(self)
+
         self.root = tk.Tk()
         self.root.title("Grille Star Battle")
         self.labels = {}
@@ -18,7 +21,7 @@ class Grid_UI:
         self.display_grid_interface()
         self.add_control_buttons()
         
-    def get_region_color(self, region):
+    def get_region_color(self, region) -> str:
         colors = {
             0: "#FF9999",
             1: "#99FF99",
@@ -33,7 +36,7 @@ class Grid_UI:
         }
         return colors.get(region)
         
-    def display_grid_interface(self):
+    def display_grid_interface(self) -> None:
         for i in range(self.board.n):
             for j in range(self.board.n):
                 cell_region_id = self.board.grid[i][j]
@@ -49,20 +52,20 @@ class Grid_UI:
                 label.grid(row=i, column=j)
                 self.labels[(i,j)] = label
                 
-    def add_control_buttons(self):
+    def add_control_buttons(self) -> None:
         btn_frame = tk.Frame(self.main_frame)
         btn_frame.pack(pady=10)
         
         tk.Button(
             btn_frame,
             text="Ajouter étoile régions",
-            command=self.add_stars
+            command=self.algo.add_stars_regions
         ).pack(side="left", padx=5)
         
         tk.Button(
             btn_frame,
             text="Ajouter étoile colonnes",
-            command=self.add_stars
+            command=self.algo.add_stars_columns
         ).pack(side="left", padx=5)
 
         # Bouton pour effacer
@@ -79,24 +82,26 @@ class Grid_UI:
             command=self.kill
         ).pack(side="left", padx=5)
     
-    def add_stars(self):
+    def add_stars(self) -> None:
         self.set_cell(0, 0, "★")
     
-    def clear_all(self):
+    def clear_all(self) -> None:
         for i in range(self.board.n):
             for j in range(self.board.n):
                 self.set_cell(i, j, "")
                 
-    def set_cell(self, row, col, text):
-        if (row, col) in self.labels:
-            self.labels[(row, col)].config(text=text)
-            self.update_display()
+    def set_cell(self, row, col, text) -> None:
+        self.labels[(row, col)].config(text=text)
+        self.update_display()
+
+    def get_cell_text(self, row, col) -> str:
+        return self.labels[(row, col)]['text']
     
-    def update_display(self):
+    def update_display(self) -> None:
         self.root.update_idletasks()
         
-    def show(self):
+    def show(self) -> None:
         self.root.mainloop()
 
-    def kill(self):
+    def kill(self) -> None:
         self.root.destroy()
