@@ -59,13 +59,13 @@ class Interface:
         
         tk.Button(
             btn_frame,
-            text="Ajouter étoile régions",
-            command=lambda: self.algo.solve(2)
+            text="Ajouter étoile backtracking colonnes",
+            command=lambda: self.algo.solve(1)
         ).pack(side="left", padx=5)
         
         tk.Button(
             btn_frame,
-            text="Ajouter étoile colonnes",
+            text="Ajouter étoile foward checking colonnes",
             command=lambda: self.algo.solve(2) 
         ).pack(side="left", padx=5)
 
