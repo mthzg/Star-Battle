@@ -2,26 +2,12 @@ class Algo:
     def __init__(self, interface):
         self.interface = interface
         
-    def add_stars_regions(self):
-        #for i in range(self.interface.board.n):
-        #    for j in range(self.interface.board.n):
-        #        if self.interface.get_cell_text(i, j) == "":
-        #            self.interface.set_cell(i, j, "★")
-        self.is_valid(0,0)
-
-    def add_stars_columns(self):
-        for j in range(self.interface.board.n):
-            for i in range(self.interface.board.n):
-                if self.interface.get_cell_text(i, j) == "":
-                    self.interface.set_cell(i, j, "★")
-
 
     def count_stars_on_row(self, row)-> int:
         counter = 0
         for i in range(self.interface.board.n):
             if self.interface.get_cell_text(row, i) == "★":
                 counter += 1
-        print(f"stars on row = {row} = {counter}") #debug
         return counter
 
     def count_stars_on_column(self, col) -> int:
@@ -29,7 +15,6 @@ class Algo:
         for i in range(self.interface.board.n):
             if self.interface.get_cell_text(i, col) == "★":
                 counter += 1
-        print(f"stars on col = {col} = {counter}") #debug
         return counter
     
     def count_stars_in_regions(self, region_id) -> int:
@@ -39,7 +24,6 @@ class Algo:
                 if self.interface.board.grid[i][j] == region_id:
                     if self.interface.get_cell_text(i, j) == "★":
                         counter += 1
-        print(f"stars in region {region_id} = {counter}")
         return counter
     
 
@@ -63,13 +47,40 @@ class Algo:
                 if (self.count_stars_on_column(col) < 2):
                     if (self.count_stars_in_regions(region_id) < 2):
                         if (not self.is_adjacent(row, col)):
-                            print("la case est valide")
                             return True
-        print("VOUS NE PASSEREZ PAS !!!")
         return False 
+    
+
+    def backtracking_columns(self, start_row=6) -> None:
+        if start_row <= self.interface.board.n:
+            for col in range(self.interface.board.n):
+                start = start_row if col == 0 else 0
+                for row in range(start, self.interface.board.n):
+                    if (self.is_valid(row, col)):
+                        self.interface.set_cell(row, col, "★")
+            if not self.is_solution_valid():
+                print("not valid")
+            else:
+                print("solution found")
+            #    self.interface.clear_all()
+            #    self.backtracking_columns(start_row + 1)
         
+    def is_solution_valid(self) -> bool:
+        for row in range(self.interface.board.n):
+            if self.count_stars_on_row(row) != 2:
+                return False
+
+        for col in range(self.interface.board.n):
+            if self.count_stars_on_column(col) != 2:
+                return False
         
+        regions = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        for region in regions:
+            if self.count_stars_in_regions(region) != 2:
+                return False
+
         
-        
+        return True
+    
 
     

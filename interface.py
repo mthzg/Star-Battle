@@ -51,6 +51,7 @@ class Interface:
                 )
                 label.grid(row=i, column=j)
                 self.labels[(i,j)] = label
+
                 
     def add_control_buttons(self) -> None:
         btn_frame = tk.Frame(self.main_frame)
@@ -59,13 +60,13 @@ class Interface:
         tk.Button(
             btn_frame,
             text="Ajouter étoile régions",
-            command=self.algo.add_stars_regions
+            command=self.algo.backtracking_columns
         ).pack(side="left", padx=5)
         
         tk.Button(
             btn_frame,
             text="Ajouter étoile colonnes",
-            command=self.algo.add_stars_columns
+            command=self.algo.backtracking_columns 
         ).pack(side="left", padx=5)
 
         # Bouton pour effacer
