@@ -59,15 +59,28 @@ class Interface:
         
         tk.Button(
             btn_frame,
-            text="Ajouter étoile backtracking colonnes",
+            text="Backtracking colonnes",
             command=lambda: self.algo.solve(1)
         ).pack(side="left", padx=5)
         
         tk.Button(
             btn_frame,
-            text="Ajouter étoile foward checking colonnes",
+            text="Foward checking colonnes",
             command=lambda: self.algo.solve(2) 
         ).pack(side="left", padx=5)
+
+        tk.Button(
+            btn_frame,
+            text="Backtracking regions",
+            command=lambda: self.algo.solve(3) 
+        ).pack(side="left", padx=5)
+
+        tk.Button(
+            btn_frame,
+            text="Foward checking regions",
+            command=lambda: self.algo.solve(4) 
+        ).pack(side="left", padx=5)
+
 
         # Bouton pour effacer
         tk.Button(
