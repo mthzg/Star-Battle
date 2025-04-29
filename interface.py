@@ -81,6 +81,12 @@ class Interface:
             command=lambda: self.algo.solve(4) 
         ).pack(side="left", padx=5)
 
+        tk.Button(
+            btn_frame,
+            text="Foward checking + MRV regions",
+            command=lambda: self.algo.solve(5) 
+        ).pack(side="left", padx=5)
+
 
         # Bouton pour effacer
         tk.Button(

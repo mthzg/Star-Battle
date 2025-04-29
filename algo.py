@@ -1,3 +1,5 @@
+import time
+
 class Algo:
     def __init__(self, interface):
         self.interface = interface
@@ -116,6 +118,22 @@ class Algo:
         
         return True
     
+    def check_all_regions_still_valid(self, region_order, region_index):
+        for region in region_order[region_index+1:]:
+            valid_cells = 0
+            for row in range(self.n):
+                for col in range(self.n):
+                    #if not (self.interface.board.grid[row][col] == region):
+                        #print("1 pour :", col, ",", row)
+                    #if not (self.interface.get_cell_text(row, col) == ""):
+                        #print("2 pour :", col, ",", row)
+                    #if not (self.is_valid(row, col)):
+                        #print("3 pour :", col, ",", row)
+                    if (self.interface.board.grid[row][col] == region and self.interface.get_cell_text(row, col) == "" and self.is_valid(row, col)):
+                        valid_cells += 1
+            if valid_cells < self.k:
+                return False
+        return True
 
 
 
@@ -191,6 +209,7 @@ class Algo:
 
     def solve_backtracking_regions(self, region_order=None, star_index=0, region_index=0):
         """Backtracking using regions as domains, processing smallest regions first"""
+        time.sleep(2)
         # Initialize region order by size (smallest first)
         if region_order is None:
             regions = {}
@@ -245,6 +264,7 @@ class Algo:
 
     def solve_forward_checking_regions(self, region_order=None, stars_placed=0, region_index=0):
         """Forward checking with regions as domains (smallest regions first)"""
+        time.sleep(2)
         # Initialize region order by size (smallest first)
         if region_order is None:
             regions = {}
@@ -300,6 +320,97 @@ class Algo:
             self.interface.set_cell(row, col, "")
     
         return False
+
+    def solve_forward_checking_MRV_regions(self, region_order=None, stars_placed=0, region_index=0):
+        """Forward checking with regions as domains + dynamic MRV (smallest region first at each step)"""
+        time.sleep(1)
+
+        # Initialize region order by size (only at first call)
+        if region_order is None:
+            regions = {}
+            for row in range(self.n):
+                for col in range(self.n):
+                    region_id = self.interface.board.grid[row][col]
+                    regions[region_id] = regions.get(region_id, 0) + 1
+
+            # Sort regions by size initially
+            region_order = sorted(regions.keys(), key=lambda x: (regions[x], x))
+            return self.solve_forward_checking_MRV_regions(region_order, 0, 0)
+
+        # Check if solution is complete
+        if self.is_solution_valid():
+            print("pas complete")
+            return True
+
+        # If we've processed all regions
+        if region_index >= len(region_order):
+            print("on a tout fait")
+            return False
+
+        # MRV
+        remaining_regions = region_order[region_index:]
+        #print(remaining_regions)
+        region_constraints = []
+        for region in remaining_regions:
+            valid_cells = []
+            for row in range(self.n):
+                for col in range(self.n):
+                    if (self.interface.board.grid[row][col] == region and
+                        self.interface.get_cell_text(row, col) == "" and
+                        self.is_valid(row, col)):
+                        valid_cells.append((row, col))
+            region_constraints.append((len(valid_cells), region_order.index(region), region))
+
+        # Trier par nombre de cellules valides (MRV)
+        region_constraints.sort()
+        print(region_constraints)
+    
+        # Choisir la région la plus contrainte
+        _, _, current_region = region_constraints[0]
+        #print(current_region)
+
+        # If we've placed k stars in the current region
+        if stars_placed == self.k:
+            print("il y a 2 etoiles dans la region")
+            self.place_blocked_cell_on_region(current_region)
+            
+            if not self.check_all_regions_still_valid(region_order, region_index):
+                print("une region ne peux plus avoir d'etoiles")
+                self.remove_blocked_cell_on_region(current_region)
+                return False
+
+            print("on passe à la prochaine région")
+            result = self.solve_forward_checking_MRV_regions(region_order, 0, region_index + 1)
+            self.remove_blocked_cell_on_region(region_order[region_index])
+            return result
+
+        # Calculer les cellules disponibles pour cette région
+        region_cells = []
+        for row in range(self.n):
+            for col in range(self.n):
+                if (self.interface.board.grid[row][col] == current_region and
+                    self.interface.get_cell_text(row, col) == "" and
+                    self.is_valid(row, col)):
+                    region_cells.append((row, col))
+                if not self.is_valid(row, col):
+                    print("1: ", col, ",", row)
+
+        # Essayer de placer les étoiles
+        for row, col in region_cells:
+            self.interface.set_cell(row, col, "★")
+            self.place_blocked_cell(row, col)
+    
+            # Appel récursif
+            if self.solve_forward_checking_MRV_regions(region_order, stars_placed + 1, region_index):
+                print("suivant")
+                return True
+            print("retour")
+            # Backtracking
+            self.remove_blocked_cell(row, col)
+            self.interface.set_cell(row, col, "")
+
+        return False
+
     
 
     def solve(self, choice):
@@ -329,6 +440,13 @@ class Algo:
                 return False
         elif (choice == 4):
             if self.solve_forward_checking_regions():
+                print("Solution trouvée et affichée")
+                return True
+            else:
+                print("Aucune solution trouvée")
+                return False
+        elif (choice == 5):
+            if self.solve_forward_checking_MRV_regions():
                 print("Solution trouvée et affichée")
                 return True
             else:
