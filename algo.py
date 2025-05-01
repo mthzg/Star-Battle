@@ -443,48 +443,47 @@ class Algo:
 
 
     def solve(self, choice):
-        """Public method to start solving - version sans solution temporaire"""
         self.interface.clear_all()
 
         if (choice == 1):
             if self.solve_backtracking_cols(start_row=6):
-                print("Solution trouvée et affichée")
+                print("solve_backtracking_cols Solution trouvée et affichée")
                 return True
             else:
-                print("Aucune solution trouvée")
+                print("solve_backtracking_cols Aucune solution trouvée")
                 return False
         elif (choice == 2):
             if self.solve_forward_checking_cols(start_row=6):
-                print("Solution trouvée et affichée")
+                print("solve_forward_checking_cols Solution trouvée et affichée")
                 return True
             else:
-                print("Aucune solution trouvée")
+                print("solve_forward_checking_cols Aucune solution trouvée")
                 return False
         elif (choice == 3):
             if self.solve_backtracking_regions():
-                print("Solution trouvée et affichée")
+                print("solve_backtracking_regions Solution trouvée et affichée")
                 return True
             else:
-                print("Aucune solution trouvée")
+                print("solve_backtracking_regions Aucune solution trouvée")
                 return False
         elif (choice == 4):
             if self.solve_forward_checking_regions():
-                print("Solution trouvée et affichée")
+                print("solve_forward_checking_regions Solution trouvée et affichée")
                 return True
             else:
-                print("Aucune solution trouvée")
+                print("solve_forward_checking_regions Aucune solution trouvée")
                 return False
         elif (choice == 5):
             if self.solve_forward_checking_MRV_cols():
-                print("Solution trouvée et affichée")
+                print("solve_forward_checking_MRV_cols Solution trouvée et affichée")
                 return True
             else:
-                print("Aucune solution trouvée")
+                print("solve_forward_checking_MRV_cols Aucune solution trouvée")
                 return False            
         elif (choice == 6):
             if self.solve_forward_checking_MRV_regions():
-                print("Solution trouvée et affichée")
+                print("solve_forward_checking_MRV_regions Solution trouvée et affichée")
                 return True
             else:
-                print("Aucune solution trouvée")
+                print("solve_forward_checking_MRV_regions Aucune solution trouvée")
                 return False
