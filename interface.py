@@ -83,8 +83,14 @@ class Interface:
 
         tk.Button(
             btn_frame,
-            text="Foward checking + MRV regions",
+            text="Foward checking + MRV colonnes",
             command=lambda: self.algo.solve(5) 
+        ).pack(side="left", padx=5)
+
+        tk.Button(
+            btn_frame,
+            text="Foward checking + MRV regions",
+            command=lambda: self.algo.solve(6) 
         ).pack(side="left", padx=5)
 
 
