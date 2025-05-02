@@ -381,6 +381,7 @@ class Algo:
         for row in range(self.n):
             for col in range(self.n):
                 if (self.interface.board.grid[row][col] == current_region and
+                    self.interface.get_cell_text(row, col) == "" and
                     self.is_valid(row, col)):
                     region_cells.append((row, col))
     
@@ -462,6 +463,8 @@ class Algo:
     def solve_forward_checking_MRV_regions(self, region_order=None, stars_placed=0, region_index=0):
         """Forward checking with regions as domains + dynamic MRV (smallest region first at each step)"""
 
+        self.manage_blocked_cell()
+
         # Initialize region order dynamically at the first call
         if region_order is None:
             region_order = []
@@ -480,8 +483,7 @@ class Algo:
                     if region_id not in region_order:
                         if region_id not in regions:
                             regions[region_id] = []
-                        if (self.interface.get_cell_text(row, col) == "" and
-                            self.is_valid(row, col)):
+                        if self.is_valid(row, col):
                             regions[region_id].append((row, col))
 
             if not regions:
@@ -496,9 +498,7 @@ class Algo:
 
         # If we've placed k stars in this region
         if stars_placed == self.k:
-            self.place_blocked_cell_on_region(current_region)
             result = self.solve_forward_checking_MRV_regions(region_order, 0, region_index + 1)
-            self.remove_blocked_cell_on_region(current_region)
             return result
 
         # Get all valid empty cells in this region
@@ -506,20 +506,17 @@ class Algo:
         for row in range(self.n):
             for col in range(self.n):
                 if (self.interface.board.grid[row][col] == current_region and
-                    self.interface.get_cell_text(row, col) == "" and
                     self.is_valid(row, col)):
                     region_cells.append((row, col))
 
         # Try placing stars in this region's cells
         for row, col in region_cells:
             self.interface.set_cell(row, col, "★")
-            self.place_blocked_cell(row, col)
 
             if self.solve_forward_checking_MRV_regions(region_order, stars_placed + 1, region_index):
                 return True
 
             # Backtrack
-            self.remove_blocked_cell(row, col)
             self.interface.set_cell(row, col, "")
 
         return False
@@ -527,6 +524,8 @@ class Algo:
 
     def solve_forward_checking_MRV_cols(self, col=0, stars_placed=0, start_row=0, cols_order=None):
         """Column-wise forward checking with MRV in single method"""
+
+        self.manage_blocked_cell()
         # Initialize column order by MRV (only at first call)
         if cols_order is None:
             # Create initial column order based on remaining valid placements
@@ -534,13 +533,12 @@ class Algo:
             for c in range(self.n):
                 valid_cells = 0
                 for r in range(self.n):
-                    if (self.interface.get_cell_text(r, c) == "" and 
-                        self.is_valid(r, c)):
+                    if self.is_valid(r, c):
                         valid_cells += 1
                 col_constraints.append((valid_cells, c))
             # Sort by number of valid placements, then original column order
             cols_order = [c for (val, c) in sorted(col_constraints)]
-            return self.solve_forward_checking_MRV_cols(0, 0, 0, cols_order)
+            return self.solve_forward_checking_MRV_cols(0, 0, start_row, cols_order)
 
         # Check if solution is complete
         if self.is_solution_valid():
@@ -548,9 +546,7 @@ class Algo:
 
         # If we've placed k stars in this column, move to next MRV column
         if stars_placed == self.k:
-            self.place_blocked_cell_on_column(cols_order[col])
             result = self.solve_forward_checking_MRV_cols(col + 1, 0, 0, cols_order)
-            self.remove_blocked_cell_on_column(cols_order[col])
             return result
 
         # If we've processed all columns
@@ -564,14 +560,12 @@ class Algo:
             if self.is_valid(row, current_col):
                 # Place star and block adjacent cells
                 self.interface.set_cell(row, current_col, "★")
-                self.place_blocked_cell(row, current_col)
 
                 # Recursive call
                 if self.solve_forward_checking_MRV_cols(col, stars_placed + 1, row + 1, cols_order):
                     return True
 
                 # Backtrack
-                self.remove_blocked_cell(row, current_col)
                 self.interface.set_cell(row, current_col, "")
 
         return False
@@ -612,7 +606,7 @@ class Algo:
                 print("solve_forward_checking_regions Aucune solution trouvée")
                 return False
         elif (choice == 5):
-            if self.solve_forward_checking_MRV_cols():
+            if self.solve_forward_checking_MRV_cols(start_row=6):
                 print("solve_forward_checking_MRV_cols Solution trouvée et affichée")
                 return True
             else:
