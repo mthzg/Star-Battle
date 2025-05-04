@@ -25,7 +25,6 @@ Les règles du Star Battle sont les suivantes :
     -Si k étoiles a été placé sur la colonne on passe à la suivante
     -sinon on revient à la première colonne en incrémentant la case de départ (row+=1, col=0)  
 
- -temps moyen de résolution : 30 secondes
 
 #### Forward checking colonnes
  -Logique :
@@ -35,7 +34,6 @@ Les règles du Star Battle sont les suivantes :
     -Si k étoiles a été placé sur la colonne on passe à la suivante
     -sinon on revient à la première colonne en incrémentant la case de départ (row+=1, col=0) en supprimant les "X"  
 
- -temps moyen de résolution : 5 minutes
 
 #### Forward checking with minimum remaining values colonnes
  -Logique :
@@ -45,7 +43,6 @@ Les règles du Star Battle sont les suivantes :
    -Si le placement n'est pas valide on vient alors retirer les étoiles et les "X" placés
    -On passe à la colonne suivante si on trouve 2 étoiles dans la colonne
 
- -temps moyen de résolution : 1 heure
 
 ### 2.3 Les domaines sont les régions de la grille
 
@@ -57,7 +54,6 @@ Les règles du Star Battle sont les suivantes :
     -Si k étoiles a été placé sur la région on passe à la suivante
     -Sinon on reste sur la même région pour placer les étoiles
 
- -temps moyen de résolution : 10 secondes
 
 #### Forward checking regions
  -Logique :
@@ -68,7 +64,6 @@ Les règles du Star Battle sont les suivantes :
     -Si k étoiles a été placé sur la région on passe à la suivante
     -Sinon on reste sur la même région pour placer les étoiles
 
- -temps moyen de résolution : 1 minute 40 secondes
 
 #### Forward checking with minimum remaining values regions
  -Logique :
@@ -78,5 +73,31 @@ Les règles du Star Battle sont les suivantes :
    -Si le placement n'est pas valide on vient alors retirer les étoiles et les "X" placés
    -On passe à la regions suivante si on trouve 2 étoiles dans la région
 
- -temps moyen de résolution : 10 secondes
+
+
+
+#### temps d'éxection
+
+-solve_backtracking_cols:
+   solve_backtracking_cols Solution trouvée et affichée
+   Temps d'exécution: 26.0825 secondes
+
+-solve_forward_checking_cols:
+   solve_forward_checking_cols Solution trouvée et affichée
+   Temps d'exécution: 169.5353 secondes
+
+-solve_forward_checking_MRV_cols:
+   Temps d'exécution: trop long (plus de 1h)
+
+-solve_backtracking_regions:
+   solve_backtracking_regions Solution trouvée et affichée
+   Temps d'exécution: 11.6562 secondes
+
+-solve_forward_checking_regions:
+   solve_forward_checking_regions Solution trouvée et affichée
+   Temps d'exécution: 74.1793 secondes
+
+-solve_forward_checking_MRV_regions:
+   solve_forward_checking_MRV_regions Solution trouvée et affichée
+   Temps d'exécution: 7.0370 secondes
 
