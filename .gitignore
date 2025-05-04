@@ -5,3 +5,4 @@ __pycache__/
 
 # Fichiers spécifiques à l'IDE
 .vscode/
+.vs/

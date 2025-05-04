@@ -24,6 +24,7 @@ Les règles du Star Battle sont les suivantes :
     -On place une étoile en fonction des contraintes (méthode is_valid)
     -Si k étoiles a été placé sur la colonne on passe à la suivante
     -sinon on revient à la première colonne en incrémentant la case de départ (row+=1, col=0)  
+
  -temps moyen de résolution : 30 secondes
 
 #### Forward checking
@@ -33,6 +34,7 @@ Les règles du Star Battle sont les suivantes :
     -on place des "X" pour indiquer la cases interdites par les constraintes
     -Si k étoiles a été placé sur la colonne on passe à la suivante
     -sinon on revient à la première colonne en incrémentant la case de départ (row+=1, col=0) en supprimant les "X"  
+
  -temps moyen de résolution : 5 minutes
 
 #### Forward checking with minimum remaining values
@@ -44,13 +46,22 @@ Les règles du Star Battle sont les suivantes :
  -Logique :
     -Lors de la première itération on trie les régions en fonction du nombre de cases
     -On prend la région la plus petite dans la liste de regions trié établi
-    -on place 
- -temps moyen de résolution : 5 minutes
+    -On place une étoile en fonction des contraintes (méthode is_valid)
+    -Si k étoiles a été placé sur la région on passe à la suivante
+    -Sinon on reste sur la même région pour placer les étoiles
+
+ -temps moyen de résolution : 
 
 #### Forward checking
-- Explication de l'implémentation
-- Analyse des performances
-- Avantages/inconvénients par rapport aux colonnes
+ -Logique :
+    -Lors de la première itération on trie les régions en fonction du nombre de cases
+    -On prend la région la plus petite dans la liste de regions trié établi
+    -On place une étoile en fonction des contraintes (méthode is_valid)
+    -on place des "X" pour indiquer la cases interdites par les constraintes
+    -Si k étoiles a été placé sur la région on passe à la suivante
+    -Sinon on reste sur la même région pour placer les étoiles
+
+ -temps moyen de résolution : 
 
 #### Forward checking with minimum remaining values
 - Explication de l'implémentation
