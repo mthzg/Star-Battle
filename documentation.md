@@ -74,6 +74,16 @@ Les règles du Star Battle sont les suivantes :
    -On passe à la regions suivante si on trouve 2 étoiles dans la région
 
 
+##### Application et Complexité
+## col
+réponse: O(C(n, k)^n × n²) -> =2.5 × 10¹⁸ col backtracking
+réponse: O(C(n, k)^n × n²) -> =2.5 × 10¹⁸ col forward checking
+réponse: O(C(n, k)^n × n²) -> =2.5 × 10¹⁸ col forward checking + MRV
+
+## regions
+réponse: O(C(n, k)^n × n²) -> =2.5 × 10¹⁸ region backtracking
+réponse: O(C(n, k)^n × n²) -> =2.5 × 10¹⁸ region forward checking
+réponse: O(C(n, k)^n × n²) -> =2.5 × 10¹⁸ region forward checking + MRV
 
 
 #### temps d'éxection
