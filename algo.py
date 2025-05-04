@@ -215,55 +215,16 @@ class Algo:
 
         return False
     
-    #def solve_forward_checking_cols(self, col=0, stars_placed=0, start_row=0):
-    #    """Your forward checking implementation with column-wise traversal"""
-    #    # Check if current solution is complete and valid
-    #    if self.is_solution_valid():
-    #        return True
-    #    # If we've placed k stars in this column, move to next column
-    #    if stars_placed == self.k:
-    #        self.place_blocked_cell_on_column(col)  # Block remaining cells in column
-    #        result = self.solve_forward_checking_cols(col + 1, 0, 0)
-    #        self.remove_blocked_cell_on_column(col)  # Unblock when backtracking
-    #        return result
-    #
-    #    # If we've processed all columns
-    #    if col >= self.n:
-    #        return False
-    #
-    #    # Try to place a star in this column
-    #    for row in range(start_row, self.n):
-    #        if self.is_valid(row, col):
-    #            # Place the star and block adjacent cells
-    #            self.interface.set_cell(row, col, "★")
-    #            self.place_blocked_cell(row, col)
-    #
-    #            # Recursive exploration
-    #            if self.solve_forward_checking_cols(col, stars_placed + 1, row + 1):
-    #                return True
-    #
-    #            # Backtrack: remove star and unblock adjacent cells
-    #            self.remove_blocked_cell(row, col)
-    #            self.interface.set_cell(row, col, "")
-    #
-    #    return False
-
-    
-
-
     def solve_forward_checking_cols(self, col=0, stars_placed=0, start_row=0):
         """Your forward checking implementation with column-wise traversal"""
-
-        self.manage_blocked_cell()
-        #time.sleep(1)
-
-
         # Check if current solution is complete and valid
         if self.is_solution_valid():
             return True
         # If we've placed k stars in this column, move to next column
         if stars_placed == self.k:
+            self.place_blocked_cell_on_column(col)  # Block remaining cells in column
             result = self.solve_forward_checking_cols(col + 1, 0, 0)
+            self.remove_blocked_cell_on_column(col)  # Unblock when backtracking
             return result
     
         # If we've processed all columns
@@ -275,15 +236,54 @@ class Algo:
             if self.is_valid(row, col):
                 # Place the star and block adjacent cells
                 self.interface.set_cell(row, col, "★")
+                self.place_blocked_cell(row, col)
     
                 # Recursive exploration
                 if self.solve_forward_checking_cols(col, stars_placed + 1, row + 1):
                     return True
     
                 # Backtrack: remove star and unblock adjacent cells
+                self.remove_blocked_cell(row, col)
                 self.interface.set_cell(row, col, "")
     
         return False
+
+    
+
+
+    #def solve_forward_checking_cols(self, col=0, stars_placed=0, start_row=0):
+    #    """Your forward checking implementation with column-wise traversal"""
+#
+    #    self.manage_blocked_cell()
+    #    #time.sleep(1)
+#
+#
+    #    # Check if current solution is complete and valid
+    #    if self.is_solution_valid():
+    #        return True
+    #    # If we've placed k stars in this column, move to next column
+    #    if stars_placed == self.k:
+    #        result = self.solve_forward_checking_cols(col + 1, 0, 0)
+    #        return result
+    #
+    #    # If we've processed all columns
+    #    if col >= self.n:
+    #        return False
+    #
+    #    # Try to place a star in this column
+    #    for row in range(start_row, self.n):
+    #        if self.is_valid(row, col):
+    #            # Place the star and block adjacent cells
+    #            self.interface.set_cell(row, col, "★")
+    #
+    #            # Recursive exploration
+    #            if self.solve_forward_checking_cols(col, stars_placed + 1, row + 1):
+    #                return True
+    #
+    #            # Backtrack: remove star and unblock adjacent cells
+    #            self.interface.set_cell(row, col, "")
+    #
+    #    return False
 
 
 
@@ -604,14 +604,14 @@ class Algo:
         self.interface.clear_all()
 
         if (choice == 1):
-            if self.solve_backtracking_cols(start_row=6):
+            if self.solve_backtracking_cols(start_row=0):
                 print("solve_backtracking_cols Solution trouvée et affichée")
                 return True
             else:
                 print("solve_backtracking_cols Aucune solution trouvée")
                 return False
         elif (choice == 2):
-            if self.solve_forward_checking_cols(start_row=6):
+            if self.solve_forward_checking_cols(start_row=0):
                 print("solve_forward_checking_cols Solution trouvée et affichée")
                 return True
             else:
