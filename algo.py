@@ -342,67 +342,11 @@ class Algo:
         return False
     
 
-    def solve_forward_checking_regions(self, region_order=None, stars_placed=0, region_index=0):
-        """Forward checking with regions as domains (smallest regions first)"""
-    
-        self.manage_blocked_cell()
-        #time.sleep(1)
-        # Initialize region order by size (smallest first)
-        if region_order is None:
-            regions = {}
-            for row in range(self.n):
-                for col in range(self.n):
-                    region_id = self.interface.board.grid[row][col]
-                    regions[region_id] = regions.get(region_id, 0) + 1
-            
-            # Sort regions by size (smallest first), then by region_id
-            region_order = sorted(regions.keys(), key=lambda x: (regions[x], x))
-            return self.solve_forward_checking_regions(region_order, 0, 0)
-    
-        # Check if solution is complete
-        if self.is_solution_valid():
-            return True
-    
-        # If we've placed k stars in this region
-        if stars_placed == self.k:
-            # Block remaining cells in this region
-            result = self.solve_forward_checking_regions(region_order, 0, region_index + 1)
-            # Unblock when backtracking
-            return result
-    
-        # If we've processed all regions
-        if region_index >= len(region_order):
-            return False
-    
-        current_region = region_order[region_index]
-        
-        # Get all valid empty cells in this region
-        region_cells = []
-        for row in range(self.n):
-            for col in range(self.n):
-                if (self.interface.board.grid[row][col] == current_region and
-                    self.interface.get_cell_text(row, col) == "" and
-                    self.is_valid(row, col)):
-                    region_cells.append((row, col))
-    
-        # Try placing stars in this region's cells
-        for row, col in region_cells:
-            # Place star and block adjacent cells
-            self.interface.set_cell(row, col, "★")
-            
-            # Recursive call - try next star in same region
-            if self.solve_forward_checking_regions(region_order, stars_placed + 1, region_index):
-                return True
-                
-            # Backtrack - remove star and unblock adjacent cells
-            self.interface.set_cell(row, col, "")
-    
-        return False
-    
-
     #def solve_forward_checking_regions(self, region_order=None, stars_placed=0, region_index=0):
     #    """Forward checking with regions as domains (smallest regions first)"""
-    #    #time.sleep(2)
+    #
+    #    self.manage_blocked_cell()
+    #    #time.sleep(1)
     #    # Initialize region order by size (smallest first)
     #    if region_order is None:
     #        regions = {}
@@ -422,10 +366,8 @@ class Algo:
     #    # If we've placed k stars in this region
     #    if stars_placed == self.k:
     #        # Block remaining cells in this region
-    #        self.place_blocked_cell_on_region(region_order[region_index])
     #        result = self.solve_forward_checking_regions(region_order, 0, region_index + 1)
     #        # Unblock when backtracking
-    #        self.remove_blocked_cell_on_region(region_order[region_index])
     #        return result
     #
     #    # If we've processed all regions
@@ -447,19 +389,137 @@ class Algo:
     #    for row, col in region_cells:
     #        # Place star and block adjacent cells
     #        self.interface.set_cell(row, col, "★")
-    #        self.place_blocked_cell(row, col)
     #        
     #        # Recursive call - try next star in same region
     #        if self.solve_forward_checking_regions(region_order, stars_placed + 1, region_index):
     #            return True
     #            
     #        # Backtrack - remove star and unblock adjacent cells
-    #        self.remove_blocked_cell(row, col)
     #        self.interface.set_cell(row, col, "")
     #
     #    return False
+    
+    def solve_forward_checking_regions(self, region_order=None, stars_placed=0, region_index=0):
+        """Forward checking with regions as domains (smallest regions first)"""
+        #time.sleep(2)
+        # Initialize region order by size (smallest first)
+        if region_order is None:
+            regions = {}
+            for row in range(self.n):
+                for col in range(self.n):
+                    region_id = self.interface.board.grid[row][col]
+                    regions[region_id] = regions.get(region_id, 0) + 1
+            
+            # Sort regions by size (smallest first), then by region_id
+            region_order = sorted(regions.keys(), key=lambda x: (regions[x], x))
+            return self.solve_forward_checking_regions(region_order, 0, 0)
+    
+        # Check if solution is complete
+        if self.is_solution_valid():
+            return True
+    
+        # If we've placed k stars in this region
+        if stars_placed == self.k:
+            # Block remaining cells in this region
+            self.place_blocked_cell_on_region(region_order[region_index])
+            result = self.solve_forward_checking_regions(region_order, 0, region_index + 1)
+            # Unblock when backtracking
+            self.remove_blocked_cell_on_region(region_order[region_index])
+            return result
+    
+        # If we've processed all regions
+        if region_index >= len(region_order):
+            return False
+    
+        current_region = region_order[region_index]
+        
+        # Get all valid empty cells in this region
+        region_cells = []
+        for row in range(self.n):
+            for col in range(self.n):
+                if (self.interface.board.grid[row][col] == current_region and
+                    self.interface.get_cell_text(row, col) == "" and
+                    self.is_valid(row, col)):
+                    region_cells.append((row, col))
+    
+        # Try placing stars in this region's cells
+        for row, col in region_cells:
+            # Place star and block adjacent cells
+            self.interface.set_cell(row, col, "★")
+            self.place_blocked_cell(row, col)
+            
+            # Recursive call - try next star in same region
+            if self.solve_forward_checking_regions(region_order, stars_placed + 1, region_index):
+                return True
+                
+            # Backtrack - remove star and unblock adjacent cells
+            self.remove_blocked_cell(row, col)
+            self.interface.set_cell(row, col, "")
+    
+        return False
 
 
+    #def solve_forward_checking_MRV_regions(self, region_order=None, stars_placed=0, region_index=0):
+    #    """Forward checking with regions as domains + dynamic MRV (smallest region first at each step)"""
+#
+    #    # Initialize region order dynamically at the first call
+    #    if region_order is None:
+    #        region_order = []
+#
+    #    # Check if solution is complete
+    #    if self.is_solution_valid():
+    #        return True
+#
+    #    # If we've processed all current regions, pick the next region dynamically using MRV
+    #    if region_index >= len(region_order):
+    #        # Map region_id to list of valid cells
+    #        regions = {}
+    #        for row in range(self.n):
+    #            for col in range(self.n):
+    #                region_id = self.interface.board.grid[row][col]
+    #                if region_id not in region_order:
+    #                    if self.is_valid(row, col):
+    #                        regions.setdefault(region_id, []).append((row, col))
+#
+    #        if not regions:
+    #            return False  # No regions left but solution incomplete
+#
+    #        # MRV: select region with fewest valid cells
+    #        next_region = min(regions.keys(), key=lambda r: len(regions[r]))
+    #        region_order.append(next_region)
+    #        return self.solve_forward_checking_MRV_regions(region_order, 0, region_index)
+#
+    #    current_region = region_order[region_index]
+#
+    #    # If we've placed k stars in this region
+    #    if stars_placed == self.k:
+    #        return self.solve_forward_checking_MRV_regions(region_order, 0, region_index + 1)
+#
+    #    # Get all valid empty cells in this region
+    #    region_cells = []
+    #    for row in range(self.n):
+    #        for col in range(self.n):
+    #            if (self.interface.board.grid[row][col] == current_region and
+    #                self.is_valid(row, col)):
+    #                region_cells.append((row, col))
+#
+    #    # Try placing stars in this region's cells
+    #    for row, col in region_cells:
+    #        self.interface.set_cell(row, col, "★")
+    #        self.place_all_blockings(row, col)
+#
+    #        if self.solve_forward_checking_MRV_regions(region_order, stars_placed + 1, region_index):
+    #            return True
+#
+    #        # Backtrack
+    #        self.interface.set_cell(row, col, "")
+    #        self.clear_all_blocked_cells()
+    #        self.place_blocked_cells_grid()
+#
+    #    return False
+    #
+
+    
     def solve_forward_checking_MRV_regions(self, region_order=None, stars_placed=0, region_index=0):
         """Forward checking with regions as domains + dynamic MRV (smallest region first at each step)"""
 
@@ -479,8 +539,11 @@ class Algo:
                 for col in range(self.n):
                     region_id = self.interface.board.grid[row][col]
                     if region_id not in region_order:
-                        if self.is_valid(row, col):
-                            regions.setdefault(region_id, []).append((row, col))
+                        if region_id not in regions:
+                            regions[region_id] = []
+                        if (self.interface.get_cell_text(row, col) == "" and
+                            self.is_valid(row, col)):
+                            regions[region_id].append((row, col))
 
             if not regions:
                 return False  # No regions left but solution incomplete
@@ -494,30 +557,35 @@ class Algo:
 
         # If we've placed k stars in this region
         if stars_placed == self.k:
-            return self.solve_forward_checking_MRV_regions(region_order, 0, region_index + 1)
+            self.place_blocked_cell_on_region(current_region)
+            result = self.solve_forward_checking_MRV_regions(region_order, 0, region_index + 1)
+            self.remove_blocked_cell_on_region(current_region)
+            return result
 
         # Get all valid empty cells in this region
         region_cells = []
         for row in range(self.n):
             for col in range(self.n):
                 if (self.interface.board.grid[row][col] == current_region and
+                    self.interface.get_cell_text(row, col) == "" and
                     self.is_valid(row, col)):
                     region_cells.append((row, col))
 
         # Try placing stars in this region's cells
         for row, col in region_cells:
             self.interface.set_cell(row, col, "★")
-            self.place_all_blockings(row, col)
+            self.place_blocked_cell(row, col)
 
             if self.solve_forward_checking_MRV_regions(region_order, stars_placed + 1, region_index):
                 return True
 
             # Backtrack
+            self.remove_blocked_cell(row, col)
             self.interface.set_cell(row, col, "")
-            self.clear_all_blocked_cells()
-            self.place_blocked_cells_grid()
 
         return False
+
+    
     
         
     def forward_checking_possible(self, stars_per_column):
@@ -595,7 +663,6 @@ class Algo:
                 self.place_blocked_cells_grid()
 
         return False
-
 
 
 

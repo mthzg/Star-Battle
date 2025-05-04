@@ -18,7 +18,7 @@ Les règles du Star Battle sont les suivantes :
 
 ### 2.2 Les domaines sont les colonnes de la grille
 
-#### Backtracking
+#### Backtracking colonnes
  -Logique :
     -Choix d'une case de départ par exemple (row=0, col=0)
     -On place une étoile en fonction des contraintes (méthode is_valid)
@@ -27,7 +27,7 @@ Les règles du Star Battle sont les suivantes :
 
  -temps moyen de résolution : 30 secondes
 
-#### Forward checking
+#### Forward checking colonnes
  -Logique :
     -Choix d'une case de départ par exemple (row=0, col=0)
     -On place une étoile en fonction des contraintes (méthode is_valid)
@@ -37,12 +37,19 @@ Les règles du Star Battle sont les suivantes :
 
  -temps moyen de résolution : 5 minutes
 
-#### Forward checking with minimum remaining values
-    #todo 
+#### Forward checking with minimum remaining values colonnes
+ -Logique :
+   -On trie les colonnes en fonction du nombre de case valide 
+   -On place les étoiles en des contraintes (méthode is_valid, valid_cells)
+   -On place les "X" en fonction des étoiles placé
+   -Si le placement n'est pas valide on vient alors retirer les étoiles et les "X" placés
+   -On passe à la colonne suivante si on trouve 2 étoiles dans la colonne
+
+ -temps moyen de résolution : 1 heure
 
 ### 2.3 Les domaines sont les régions de la grille
 
-#### Backtracking
+#### Backtracking regions
  -Logique :
     -Lors de la première itération on trie les régions en fonction du nombre de cases
     -On prend la région la plus petite dans la liste de regions trié établi
@@ -50,9 +57,9 @@ Les règles du Star Battle sont les suivantes :
     -Si k étoiles a été placé sur la région on passe à la suivante
     -Sinon on reste sur la même région pour placer les étoiles
 
- -temps moyen de résolution : 
+ -temps moyen de résolution : 10 secondes
 
-#### Forward checking
+#### Forward checking regions
  -Logique :
     -Lors de la première itération on trie les régions en fonction du nombre de cases
     -On prend la région la plus petite dans la liste de regions trié établi
@@ -61,24 +68,15 @@ Les règles du Star Battle sont les suivantes :
     -Si k étoiles a été placé sur la région on passe à la suivante
     -Sinon on reste sur la même région pour placer les étoiles
 
- -temps moyen de résolution : 
+ -temps moyen de résolution : 1 minute 40 secondes
 
-#### Forward checking with minimum remaining values
-- Explication de l'implémentation
-- Analyse de l'impact du MRV
-- Comparaison complète des approches
+#### Forward checking with minimum remaining values regions
+ -Logique :
+   -On trie les regions en fonction du nombre de case valide 
+   -On place les étoiles en des contraintes (méthode is_valid)
+   -On place les "X" en fonction des étoiles placé
+   -Si le placement n'est pas valide on vient alors retirer les étoiles et les "X" placés
+   -On passe à la regions suivante si on trouve 2 étoiles dans la région
 
-## 3. Résultats et analyse
+ -temps moyen de résolution : 10 secondes
 
-Comparaison globale des différentes approches:
-- Temps d'exécution
-- Nombre de noeuds explorés
-- Efficacité selon la taille des grilles
-
-## 4. Conclusion
-
-Synthèse des résultats et pistes d'amélioration possibles.
-
-## 5. Annexes
-
-Grilles de test utilisées, captures d'écran, etc.
